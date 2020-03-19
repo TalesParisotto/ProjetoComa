@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "928663178934",
+    "firebase_url": "https://coma-1b1e4.firebaseio.com",
+    "project_id": "coma-1b1e4",
+    "storage_bucket": "coma-1b1e4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:928663178934:android:615b2d06f8e514ace42017",
+        "android_client_info": {
+          "package_name": "com.example.labengenharia.coma"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "928663178934-84h03a5bkq32fbshs0bounu7k25rnuui.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.labengenharia.coma",
+            "certificate_hash": "d7554da997db11d4436977f11c6b365a82fa1201"
+          }
+        },
+        {
+          "client_id": "928663178934-9pbj93rnnoie2qrj0gqim9ssilllkthk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBxQpzjiVQdtDt3a0GWU6IPQ443Gx3hi-Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "928663178934-9pbj93rnnoie2qrj0gqim9ssilllkthk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
