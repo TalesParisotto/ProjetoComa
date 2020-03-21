@@ -10,16 +10,14 @@ public class Departamento {
 
     private  String departemento;
 
-    public void salvar(String dataEscolhida){
+    public void salvar(){
 
         FirebaseAuth autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
         String idUsuario = Base64Custom.codificarBase64( autenticacao.getCurrentUser().getEmail() );
-        String mesAno = DateCustom.mesAnoDataEscolhida( dataEscolhida );
 
         DatabaseReference firebase = ConfiguracaoFirebase.getFirebaseDatabase();
-        firebase.child("departemento")
-                .child( idUsuario )
-                .child( mesAno )
+        firebase.child("Departamento")
+                //.child( idUsuario )
                 .push()
                 .setValue(this);
 

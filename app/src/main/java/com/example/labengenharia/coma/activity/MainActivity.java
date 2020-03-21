@@ -3,6 +3,7 @@ package com.example.labengenharia.coma.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.labengenharia.coma.R;
 import com.example.labengenharia.coma.config.ConfiguracaoFirebase;
@@ -74,6 +75,8 @@ public class MainActivity extends IntroActivity {
 
     public void abrirTelaPrincipal(){
         startActivity(new Intent(this, PrincipalActivity.class));
+
+
     }
 
 }

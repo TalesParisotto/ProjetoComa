@@ -1,5 +1,6 @@
 package com.example.labengenharia.coma.activity;
 
+import android.content.Intent;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import com.example.labengenharia.coma.R;
 import com.example.labengenharia.coma.config.ConfiguracaoFirebase;
 import com.example.labengenharia.coma.helper.Base64Custom;
 import com.example.labengenharia.coma.helper.DateCustom;
+import com.example.labengenharia.coma.model.Departamento;
 import com.example.labengenharia.coma.model.Movimentacao;
 import com.example.labengenharia.coma.model.Usuario;
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,7 +25,7 @@ public class DepartamentoActivity extends AppCompatActivity {
 
     private TextInputEditText campoData, campoCategoria, campoDescricao;
     private EditText campoValor;
-    private Movimentacao movimentacao;
+    private Departamento departamento;
     private DatabaseReference firebaseRef = ConfiguracaoFirebase.getFirebaseDatabase();
     private FirebaseAuth autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
     private Double receitaTotal;
@@ -33,35 +35,20 @@ public class DepartamentoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_departamento);
 
-        campoValor = findViewById(R.id.editValor);
-        campoData = findViewById(R.id.editData);
-        campoCategoria = findViewById(R.id.editCategoria);
-        campoDescricao = findViewById(R.id.editDescricao);
-
-        //Preenche o campo data com a date atual
-        campoData.setText( DateCustom.dataAtual() );
-        recuperarReceitaTotal();
+        campoValor = findViewById(R.id.editDep);
 
     }
 
-    public void salvarDespartamento(View view){
+    public void salvarDerpartamento(View view){
 
         if ( validarCamposReceita() ){
 
-            movimentacao = new Movimentacao();
-            String data = campoData.getText().toString();
-            Double valorRecuperado = Double.parseDouble(campoValor.getText().toString());
+            departamento = new Departamento();
+            String valorRecuperado =campoValor.getText().toString();
 
-            movimentacao.setValor( valorRecuperado );
-            movimentacao.setCategoria( campoCategoria.getText().toString() );
-            movimentacao.setDescricao( campoDescricao.getText().toString() );
-            movimentacao.setData( data );
-            movimentacao.setTipo( "r" );
+            departamento.setDepartemento( valorRecuperado );
 
-            Double receitaAtualizada = receitaTotal + valorRecuperado;
-            atualizarReceita( receitaAtualizada );
-
-            movimentacao.salvar( data );
+            departamento.salvar();
 
             finish();
 
@@ -73,33 +60,9 @@ public class DepartamentoActivity extends AppCompatActivity {
     public Boolean validarCamposReceita(){
 
         String textoValor = campoValor.getText().toString();
-        String textoData = campoData.getText().toString();
-        String textoCategoria = campoCategoria.getText().toString();
-        String textoDescricao = campoDescricao.getText().toString();
 
         if ( !textoValor.isEmpty() ){
-            if ( !textoData.isEmpty() ){
-                if ( !textoCategoria.isEmpty() ){
-                    if ( !textoDescricao.isEmpty() ){
-                        return true;
-                    }else {
-                        Toast.makeText(DepartamentoActivity.this,
-                                "Descrição não foi preenchida!",
-                                Toast.LENGTH_SHORT).show();
-                        return false;
-                    }
-                }else {
-                    Toast.makeText(DepartamentoActivity.this,
-                            "Categoria não foi preenchida!",
-                            Toast.LENGTH_SHORT).show();
-                    return false;
-                }
-            }else {
-                Toast.makeText(DepartamentoActivity.this,
-                        "Data não foi preenchida!",
-                        Toast.LENGTH_SHORT).show();
-                return false;
-            }
+            return true;
         }else {
             Toast.makeText(DepartamentoActivity.this,
                     "Valor não foi preenchido!",

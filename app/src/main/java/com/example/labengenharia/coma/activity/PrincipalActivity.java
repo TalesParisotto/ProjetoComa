@@ -85,7 +85,7 @@ public class PrincipalActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter( adapterMovimentacao );
 
-        spinner();
+
 
 
     }
@@ -130,11 +130,12 @@ public class PrincipalActivity extends AppCompatActivity {
 
                         switch (position) {
                             case 0:
-                                Toast.makeText(parent.getContext(), "Spinner item 1!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(parent.getContext(), "Doce", Toast.LENGTH_SHORT).show();
+                                recuperarMovimentacoes2(position);
                                 break;
                             case 1:
                                 Toast.makeText(parent.getContext(), "Salgado!", Toast.LENGTH_SHORT).show();
-                                recuperarMovimentacoes2();
+                                recuperarMovimentacoes2(position);
                                 break;
                             case 2:
                                 Toast.makeText(parent.getContext(), "Spinner item 3!", Toast.LENGTH_SHORT).show();
@@ -248,7 +249,7 @@ public class PrincipalActivity extends AppCompatActivity {
 
     }
 
-    public void recuperarMovimentacoes2(){
+    public void recuperarMovimentacoes2(final int position){
 
         String emailUsuario = autenticacao.getCurrentUser().getEmail();
         String idUsuario = Base64Custom.codificarBase64( emailUsuario );
@@ -266,14 +267,11 @@ public class PrincipalActivity extends AppCompatActivity {
                     Movimentacao movimentacao = dados.getValue( Movimentacao.class );
                     movimentacao.setKey( dados.getKey() );
 
-                    String tipo = movimentacao.getTipo();
+                    String departamento = movimentacao.getCategoria();
 
-                    if( areas.get(posi).equals(tipo)) {
+                    if( areas.get(position).equals(departamento)) {
                         movimentacoes.add(movimentacao);
-                        System.out.println("Tipo: " + movimentacao.getTipo());
-                    }else{
-                        movimentacoes.clear();
-                        movimentacoes = null;
+                        System.out.println("Departamento: " + movimentacao.getCategoria());
                     }
 
                 }
@@ -401,7 +399,7 @@ public class PrincipalActivity extends AppCompatActivity {
                 mesAnoSelecionado = String.valueOf( mesSelecionado + "" + date.getYear() );
 
                 movimentacaoRef.removeEventListener( valueEventListenerMovimentacoes );
-                recuperarMovimentacoes();
+                recuperarMovimentacoes2(posi);
             }
         });
 
@@ -411,7 +409,8 @@ public class PrincipalActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         recuperarResumo();
-        recuperarMovimentacoes();
+        //recuperarMovimentacoes();
+        spinner();
     }
 
     @Override

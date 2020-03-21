@@ -18,6 +18,7 @@ public class Movimentacao {
     private String tipo;
     private double valor;
     private String key;
+    private String departamento;
 
     public Movimentacao() {
     }
@@ -83,5 +84,13 @@ public class Movimentacao {
 
     public void setValor(double valor) {
         this.valor = valor;
+    }
+
+    public String getDepartamento() {
+        return departamento;
+    }
+
+    public void setDepartamento(String departamento) {
+        this.departamento = departamento;
     }
 }
