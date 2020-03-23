@@ -1,5 +1,6 @@
 package com.example.labengenharia.coma.activity;
 
+import android.content.Intent;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -28,6 +29,11 @@ public class ReceitasActivity extends AppCompatActivity {
     private FirebaseAuth autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
     private Double receitaTotal;
 
+    private String key;
+    private String mesAnoSelecionado;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,31 +48,75 @@ public class ReceitasActivity extends AppCompatActivity {
         campoData.setText( DateCustom.dataAtual() );
         recuperarReceitaTotal();
 
+        Intent editIntent = getIntent();
+
+        if(editIntent != null){
+            key = PrincipalActivity.keyReceita;
+            mesAnoSelecionado = PrincipalActivity.mesReceita;
+            System.out.println("key: " + key);
+            System.out.println("mesAnoSelecionado: " + mesAnoSelecionado);
+        }
+    }
+
+    public void editarReceita(){
+
+        String emailUsuario = autenticacao.getCurrentUser().getEmail();
+        String idUsuario = Base64Custom.codificarBase64( emailUsuario );
+        DatabaseReference movimentacaoRef; movimentacaoRef = firebaseRef.child("movimentacao")
+                .child( idUsuario )
+                .child( mesAnoSelecionado );
+
+        movimentacao = new Movimentacao();
+        String data = campoData.getText().toString();
+        Double valorRecuperado = Double.parseDouble(campoValor.getText().toString());
+
+        movimentacao.setValor( valorRecuperado );
+        movimentacao.setCategoria( campoCategoria.getText().toString() );
+        movimentacao.setDescricao( campoDescricao.getText().toString() );
+        movimentacao.setData( data );
+        movimentacao.setTipo( "r" );
+
+        System.out.println("movimentacao: " + movimentacao.toString());
+        System.out.println("key: " + key);
+
+        movimentacaoRef.child( key ).setValue(movimentacao);
+
+        PrincipalActivity.keyReceita = null;
+        PrincipalActivity.mesReceita =  null;
+
     }
 
     public void salvarReceita(View view){
 
-        if ( validarCamposReceita() ){
+        if(key != null){
+            if (validarCamposReceita()) {
+                System.out.println("entro no editarReceita");
+                editarReceita();
+                finish();
+            }
+        }else {
 
-            movimentacao = new Movimentacao();
-            String data = campoData.getText().toString();
-            Double valorRecuperado = Double.parseDouble(campoValor.getText().toString());
+            if (validarCamposReceita()) {
+                System.out.println("salvarReceita");
+                movimentacao = new Movimentacao();
+                String data = campoData.getText().toString();
+                Double valorRecuperado = Double.parseDouble(campoValor.getText().toString());
 
-            movimentacao.setValor( valorRecuperado );
-            movimentacao.setCategoria( campoCategoria.getText().toString() );
-            movimentacao.setDescricao( campoDescricao.getText().toString() );
-            movimentacao.setData( data );
-            movimentacao.setTipo( "r" );
+                movimentacao.setValor(valorRecuperado);
+                movimentacao.setCategoria(campoCategoria.getText().toString());
+                movimentacao.setDescricao(campoDescricao.getText().toString());
+                movimentacao.setData(data);
+                movimentacao.setTipo("r");
 
-            Double receitaAtualizada = receitaTotal + valorRecuperado;
-            atualizarReceita( receitaAtualizada );
+                Double receitaAtualizada = receitaTotal + valorRecuperado;
+                atualizarReceita(receitaAtualizada);
 
-            movimentacao.salvar( data );
+                movimentacao.salvar( data );
 
-            finish();
+                finish();
 
+            }
         }
-
 
     }
 

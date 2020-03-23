@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.labengenharia.coma.activity.ReceitasActivity">
+    tools:context="com.example.labengenharia.coma.activity.DespesasActivity">
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -67,7 +67,7 @@
             android:id="@+id/editCategoria"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="ex: salário" />
+            android:hint="ex: Doce" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -85,7 +85,7 @@
             android:id="@+id/editDescricao"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="ex: salário mensal" />
+            android:hint="ex: Bombom recheado" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.FloatingActionButton

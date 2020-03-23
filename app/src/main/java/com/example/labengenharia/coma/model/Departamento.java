@@ -17,8 +17,8 @@ public class Departamento {
 
         DatabaseReference firebase = ConfiguracaoFirebase.getFirebaseDatabase();
         firebase.child("Departamento")
-                //.child( idUsuario )
-                .push()
+                .child( idUsuario )
+                //.push()
                 .setValue(this);
 
     }

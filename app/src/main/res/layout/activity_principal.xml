@@ -34,7 +34,7 @@
         app:menu_colorPressed="@color/colorAccent"
         >
 
-        <com.github.clans.fab.FloatingActionButton
+       <!-- <com.github.clans.fab.FloatingActionButton
             android:id="@+id/menu_departamento"
             android:onClick="adicionarDepartamento"
             android:layout_width="wrap_content"
@@ -43,7 +43,7 @@
             fab:fab_colorNormal="@color/colorPrimaryDespesa"
             fab:fab_label="Departamento"
             fab:fab_size="mini"
-            />
+            />-->
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/menu_despesa"

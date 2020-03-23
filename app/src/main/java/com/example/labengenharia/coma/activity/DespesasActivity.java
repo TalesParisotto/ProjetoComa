@@ -1,5 +1,6 @@
 package com.example.labengenharia.coma.activity;
 
+import android.content.Intent;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -28,6 +29,9 @@ public class DespesasActivity extends AppCompatActivity {
     private FirebaseAuth autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
     private Double despesaTotal;
 
+    private String key;
+    private String mesAnoSelecionado;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,33 +46,78 @@ public class DespesasActivity extends AppCompatActivity {
         campoData.setText( DateCustom.dataAtual() );
         recuperarDespesaTotal();
 
+        Intent editIntent = getIntent();
+
+        if(editIntent != null){
+            key = PrincipalActivity.keyDespesa;
+            mesAnoSelecionado = PrincipalActivity.mesDespesa;
+            System.out.println("key da tela despesa: " + key);
+            System.out.println("mesAnoSelecionado: " + mesAnoSelecionado);
+        }
+
+    }
+
+    public void editarDespesa(){
+
+        String emailUsuario = autenticacao.getCurrentUser().getEmail();
+        String idUsuario = Base64Custom.codificarBase64( emailUsuario );
+        DatabaseReference movimentacaoRef; movimentacaoRef = firebaseRef.child("movimentacao")
+                .child( idUsuario )
+                .child( mesAnoSelecionado );
+
+        movimentacao = new Movimentacao();
+        String data = campoData.getText().toString();
+        Double valorRecuperado = Double.parseDouble(campoValor.getText().toString());
+
+        movimentacao.setValor( valorRecuperado );
+        movimentacao.setCategoria( campoCategoria.getText().toString() );
+        movimentacao.setDescricao( campoDescricao.getText().toString() );
+        movimentacao.setData( data );
+        movimentacao.setTipo( "d" );
+
+        System.out.println("movimentacao: " + movimentacao.toString());
+        System.out.println("key do metodo editardepesa: " + key);
+
+        movimentacaoRef.child( key ).setValue(movimentacao);
+
+        PrincipalActivity.keyDespesa = null;
+        PrincipalActivity.mesDespesa = null;
+
     }
 
     public void salvarDespesa(View view){
 
-        if ( validarCamposDespesa() ){
 
-            movimentacao = new Movimentacao();
-            String data = campoData.getText().toString();
-            Double valorRecuperado = Double.parseDouble(campoValor.getText().toString());
+        if(key != null) {
+            if (validarCamposDespesa()) {
+                editarDespesa();
+                finish();
+            }
+        }else {
+                if (validarCamposDespesa()) {
 
-            movimentacao.setValor( valorRecuperado );
-            movimentacao.setCategoria( campoCategoria.getText().toString() );
-            movimentacao.setDescricao( campoDescricao.getText().toString() );
-            movimentacao.setData( data );
-            movimentacao.setTipo( "d" );
+                    System.out.println("chegouuuuu aquiii");
 
-            Double despesaAtualizada = despesaTotal + valorRecuperado;
-            atualizarDespesa( despesaAtualizada );
+                    movimentacao = new Movimentacao();
+                    String data = campoData.getText().toString();
+                    Double valorRecuperado = Double.parseDouble(campoValor.getText().toString());
 
-            movimentacao.salvar( data );
+                    movimentacao.setValor(valorRecuperado);
+                    movimentacao.setCategoria(campoCategoria.getText().toString());
+                    movimentacao.setDescricao(campoDescricao.getText().toString());
+                    movimentacao.setData(data);
+                    movimentacao.setTipo("d");
 
-            finish();
+                    Double despesaAtualizada = despesaTotal + valorRecuperado;
+                    atualizarDespesa(despesaAtualizada);
 
+                    movimentacao.salvar(data);
+
+                    finish();
+
+                }
+            }
         }
-
-
-    }
 
     public Boolean validarCamposDespesa(){
 

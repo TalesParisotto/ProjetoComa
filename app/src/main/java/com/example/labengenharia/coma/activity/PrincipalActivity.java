@@ -61,6 +61,14 @@ public class PrincipalActivity extends AppCompatActivity {
     private List<String> areas;
     private int posi;
 
+     static String  keyReceita;
+     static String mesReceita;
+
+    static String  keyDespesa;
+    static String mesDespesa;
+
+    private Movimentacao movi;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,11 +104,6 @@ public class PrincipalActivity extends AppCompatActivity {
         String idUsuario = Base64Custom.codificarBase64( emailUsuario );
         movimentacaoRef = firebaseRef.child("Departamento");
 
-        /*if(movimentacaoRef != null){
-            System.out.println("movimentacaoRef"+ movimentacaoRef.getKey());
-        }*/
-
-
         movimentacaoRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -125,33 +128,17 @@ public class PrincipalActivity extends AppCompatActivity {
                 areaSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
                         posi =  position;
-
-                        switch (position) {
-                            case 0:
-                                Toast.makeText(parent.getContext(), "Doce", Toast.LENGTH_SHORT).show();
-                                recuperarMovimentacoes2(position);
-                                break;
-                            case 1:
-                                Toast.makeText(parent.getContext(), "Salgado!", Toast.LENGTH_SHORT).show();
-                                recuperarMovimentacoes2(position);
-                                break;
-                            case 2:
-                                Toast.makeText(parent.getContext(), "Spinner item 3!", Toast.LENGTH_SHORT).show();
-                                break;
-                        }
+                        recuperarMovimentacoes2(position);
                     }
 
                     @Override
                     public void onNothingSelected(AdapterView<?> parent) {
 
-                        // sometimes you need nothing here
                     }
                 });
 
             }
-
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -181,6 +168,7 @@ public class PrincipalActivity extends AppCompatActivity {
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 excluirMovimentacao( viewHolder );
             }
+
         };
 
         new ItemTouchHelper( itemTouch ).attachToRecyclerView( recyclerView );
@@ -192,11 +180,11 @@ public class PrincipalActivity extends AppCompatActivity {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 
         //Configura AlertDialog
-        alertDialog.setTitle("Excluir Movimentação da Conta");
-        alertDialog.setMessage("Você tem certeza que deseja realmente excluir essa movimentação de sua conta?");
+        alertDialog.setTitle("Editar ou excluir");
+        alertDialog.setMessage("Você pode escolher entre editar ou excluir este registro");
         alertDialog.setCancelable(false);
 
-        alertDialog.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
+        alertDialog.setPositiveButton("Excluir", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 int position = viewHolder.getAdapterPosition();
@@ -214,6 +202,22 @@ public class PrincipalActivity extends AppCompatActivity {
 
             }
         });
+
+        alertDialog.setNeutralButton("Editar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        int position = viewHolder.getAdapterPosition();
+                        movimentacao = movimentacoes.get( position );
+
+                        movi = movimentacao;
+
+                        if(movi.getTipo().equals("r")){
+                            adicionarReceita(viewHolder.itemView);
+                        }else{
+                            adicionarDespesa(viewHolder.itemView);
+                        }
+                    }
+                });
 
         alertDialog.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
             @Override
@@ -372,11 +376,30 @@ public class PrincipalActivity extends AppCompatActivity {
     }
 
     public void adicionarDespesa(View view){
-        startActivity(new Intent(this, DespesasActivity.class));
+        if(movi != null){
+                System.out.println("Tipo: " + movi.getTipo());
+                Intent intent = new Intent(this, DespesasActivity.class);
+                keyDespesa = movi.getKey();
+                mesDespesa = mesAnoSelecionado;
+                movi = null;
+                 System.out.println("Key metodo adicionarDespesa: " + keyDespesa);
+                startActivity(intent);
+        }else{
+            startActivity(new Intent(this, DespesasActivity.class));
+        }
     }
 
     public void adicionarReceita(View view){
-        startActivity(new Intent(this, ReceitasActivity.class));
+        if(movi != null){
+                System.out.println("Tipo: " + movi.getTipo());
+                Intent intent = new Intent(this, ReceitasActivity.class);
+                keyReceita = movi.getKey();
+                mesReceita = mesAnoSelecionado;
+                movi = null;
+                startActivity(intent);
+        }else {
+            startActivity(new Intent(this, ReceitasActivity.class));
+        }
     }
 
     public void adicionarDepartamento(View view){
