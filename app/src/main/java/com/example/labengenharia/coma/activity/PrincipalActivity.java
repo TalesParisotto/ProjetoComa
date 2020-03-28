@@ -67,7 +67,7 @@ public class PrincipalActivity extends AppCompatActivity {
     static String  keyDespesa;
     static String mesDespesa;
 
-    private Movimentacao movi;
+    static Movimentacao movi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,7 +129,11 @@ public class PrincipalActivity extends AppCompatActivity {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         posi =  position;
-                        recuperarMovimentacoes2(position);
+                        if(position == 0){
+                            recuperarMovimentacoes();
+                        } else {
+                            recuperarMovimentacoes2(position);
+                        }
                     }
 
                     @Override
@@ -381,8 +385,6 @@ public class PrincipalActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, DespesasActivity.class);
                 keyDespesa = movi.getKey();
                 mesDespesa = mesAnoSelecionado;
-                movi = null;
-                 System.out.println("Key metodo adicionarDespesa: " + keyDespesa);
                 startActivity(intent);
         }else{
             startActivity(new Intent(this, DespesasActivity.class));
@@ -395,7 +397,6 @@ public class PrincipalActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, ReceitasActivity.class);
                 keyReceita = movi.getKey();
                 mesReceita = mesAnoSelecionado;
-                movi = null;
                 startActivity(intent);
         }else {
             startActivity(new Intent(this, ReceitasActivity.class));
@@ -422,7 +423,11 @@ public class PrincipalActivity extends AppCompatActivity {
                 mesAnoSelecionado = String.valueOf( mesSelecionado + "" + date.getYear() );
 
                 movimentacaoRef.removeEventListener( valueEventListenerMovimentacoes );
-                recuperarMovimentacoes2(posi);
+                if(posi == 0){
+                    recuperarMovimentacoes();
+                }else {
+                    recuperarMovimentacoes2(posi);
+                }
             }
         });
 

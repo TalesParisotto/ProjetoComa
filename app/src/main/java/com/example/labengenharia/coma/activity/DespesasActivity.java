@@ -46,13 +46,18 @@ public class DespesasActivity extends AppCompatActivity {
         campoData.setText( DateCustom.dataAtual() );
         recuperarDespesaTotal();
 
-        Intent editIntent = getIntent();
-
-        if(editIntent != null){
+        if( PrincipalActivity.movi != null){
             key = PrincipalActivity.keyDespesa;
             mesAnoSelecionado = PrincipalActivity.mesDespesa;
-            System.out.println("key da tela despesa: " + key);
+            System.out.println("key: " + key);
             System.out.println("mesAnoSelecionado: " + mesAnoSelecionado);
+            System.out.println("movi: " + PrincipalActivity.movi.toString());
+
+            campoValor.setText(String.valueOf(PrincipalActivity.movi.getValor()));
+            campoData.setText(PrincipalActivity.movi.getData());
+            campoCategoria.setText(PrincipalActivity.movi.getCategoria());
+            campoDescricao.setText(PrincipalActivity.movi.getDescricao());
+
         }
 
     }
@@ -61,7 +66,8 @@ public class DespesasActivity extends AppCompatActivity {
 
         String emailUsuario = autenticacao.getCurrentUser().getEmail();
         String idUsuario = Base64Custom.codificarBase64( emailUsuario );
-        DatabaseReference movimentacaoRef; movimentacaoRef = firebaseRef.child("movimentacao")
+        DatabaseReference movimentacaoRef;
+        movimentacaoRef = firebaseRef.child("movimentacao")
                 .child( idUsuario )
                 .child( mesAnoSelecionado );
 
@@ -79,9 +85,6 @@ public class DespesasActivity extends AppCompatActivity {
         System.out.println("key do metodo editardepesa: " + key);
 
         movimentacaoRef.child( key ).setValue(movimentacao);
-
-        PrincipalActivity.keyDespesa = null;
-        PrincipalActivity.mesDespesa = null;
 
     }
 
@@ -188,6 +191,16 @@ public class DespesasActivity extends AppCompatActivity {
 
         usuarioRef.child("despesaTotal").setValue(despesa);
 
+    }
+
+    @Override
+    public void finish() {
+        PrincipalActivity.keyReceita = null;
+        PrincipalActivity.mesReceita =  null;
+        PrincipalActivity.movi = null;
+
+        System.out.println("PrincipalActivity.movi pra nullar: " + PrincipalActivity.movi);
+        super.finish();
     }
 
 }

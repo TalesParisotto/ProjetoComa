@@ -93,4 +93,17 @@ public class Movimentacao {
     public void setDepartamento(String departamento) {
         this.departamento = departamento;
     }
+
+    @Override
+    public String toString() {
+        return "Movimentacao{" +
+                "data='" + data + '\'' +
+                ", categoria='" + categoria + '\'' +
+                ", descricao='" + descricao + '\'' +
+                ", tipo='" + tipo + '\'' +
+                ", valor=" + valor +
+                ", key='" + key + '\'' +
+                ", departamento='" + departamento + '\'' +
+                '}';
+    }
 }
