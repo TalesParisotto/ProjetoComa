@@ -4,9 +4,6 @@ import com.example.labengenharia.coma.config.ConfiguracaoFirebase;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
 
-/**
- * Created by jamiltondamasceno
- */
 
 public class Usuario {
 

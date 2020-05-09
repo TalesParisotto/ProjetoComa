@@ -12,9 +12,6 @@ import com.example.labengenharia.coma.model.Movimentacao;
 
 import java.util.List;
 
-/**
- * Created by Jamilton Damasceno
- */
 
 public class AdapterMovimentacao extends RecyclerView.Adapter<AdapterMovimentacao.MyViewHolder> {
 

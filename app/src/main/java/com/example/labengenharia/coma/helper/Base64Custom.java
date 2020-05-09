@@ -2,9 +2,6 @@ package com.example.labengenharia.coma.helper;
 
 import android.util.Base64;
 
-/**
- * Created by jamiltondamasceno
- */
 
 public class Base64Custom {
 

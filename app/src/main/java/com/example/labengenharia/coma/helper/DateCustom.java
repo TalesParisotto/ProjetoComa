@@ -2,9 +2,6 @@ package com.example.labengenharia.coma.helper;
 
 import java.text.SimpleDateFormat;
 
-/**
- * Created by jamiltondamasceno
- */
 
 public class DateCustom {
 

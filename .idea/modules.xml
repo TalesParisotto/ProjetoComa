@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Coma.iml" filepath="$PROJECT_DIR$/Coma.iml" group="Coma" />
+      <module fileurl="file://$PROJECT_DIR$/ProjetoComa.iml" filepath="$PROJECT_DIR$/ProjetoComa.iml" group="ProjetoComa" />
+      <module fileurl="file://$PROJECT_DIR$/app/ProjetoComa-app.iml" filepath="$PROJECT_DIR$/app/ProjetoComa-app.iml" group="ProjetoComa/app" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="Coma/app" />
     </modules>
   </component>
