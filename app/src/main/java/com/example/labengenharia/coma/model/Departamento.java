@@ -9,7 +9,7 @@ import com.google.firebase.database.DatabaseReference;
 public class Departamento {
 
     private  String departemento;
-
+    private String key;
     public void salvar(){
 
         FirebaseAuth autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
@@ -18,7 +18,7 @@ public class Departamento {
         DatabaseReference firebase = ConfiguracaoFirebase.getFirebaseDatabase();
         firebase.child("Departamento")
                 .child( idUsuario )
-                //.push()
+                .push()
                 .setValue(this);
 
     }
@@ -29,5 +29,13 @@ public class Departamento {
 
     public void setDepartemento(String departemento) {
         this.departemento = departemento;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 }

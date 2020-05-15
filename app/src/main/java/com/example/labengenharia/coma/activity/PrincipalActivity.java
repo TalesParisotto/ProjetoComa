@@ -22,6 +22,7 @@ import com.example.labengenharia.coma.R;
 import com.example.labengenharia.coma.adapter.AdapterMovimentacao;
 import com.example.labengenharia.coma.config.ConfiguracaoFirebase;
 import com.example.labengenharia.coma.helper.Base64Custom;
+import com.example.labengenharia.coma.model.Departamento;
 import com.example.labengenharia.coma.model.Movimentacao;
 import com.example.labengenharia.coma.model.Usuario;
 import com.google.firebase.auth.FirebaseAuth;
@@ -102,7 +103,8 @@ public class PrincipalActivity extends AppCompatActivity {
 
         String emailUsuario = autenticacao.getCurrentUser().getEmail();
         String idUsuario = Base64Custom.codificarBase64( emailUsuario );
-        movimentacaoRef = firebaseRef.child("Departamento");
+        movimentacaoRef = firebaseRef.child("Departamento").child(idUsuario);
+        // movimentacaoRef = firebaseRef.child("Departamento");
 
         movimentacaoRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -114,7 +116,9 @@ public class PrincipalActivity extends AppCompatActivity {
 
 
                 for (DataSnapshot areaSnapshot: dataSnapshot.getChildren()) {
-                    areas.add(areaSnapshot.getValue(String.class));
+                    Departamento dep = areaSnapshot.getValue(Departamento.class);
+                    areas.add(dep.getDepartemento());
+                    //areas.add(areaSnapshot.getValue(String.class));
                 }
 
                 for(String i : areas){
@@ -129,11 +133,9 @@ public class PrincipalActivity extends AppCompatActivity {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         posi =  position;
-                        if(position == 0){
-                            recuperarMovimentacoes();
-                        } else {
-                            recuperarMovimentacoes2(position);
-                        }
+
+                        recuperarMovimentacoes2(position);
+
                     }
 
                     @Override
@@ -296,7 +298,7 @@ public class PrincipalActivity extends AppCompatActivity {
 
     }
 
-    public void recuperarMovimentacoes(){
+    public void recuperarTodasMovimentacoes(View view){
 
         String emailUsuario = autenticacao.getCurrentUser().getEmail();
         String idUsuario = Base64Custom.codificarBase64( emailUsuario );
@@ -423,11 +425,8 @@ public class PrincipalActivity extends AppCompatActivity {
                 mesAnoSelecionado = String.valueOf( mesSelecionado + "" + date.getYear() );
 
                 movimentacaoRef.removeEventListener( valueEventListenerMovimentacoes );
-                if(posi == 0){
-                    recuperarMovimentacoes();
-                }else {
+
                     recuperarMovimentacoes2(posi);
-                }
             }
         });
 
@@ -437,7 +436,7 @@ public class PrincipalActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         recuperarResumo();
-        //recuperarMovimentacoes();
+        recuperarTodasMovimentacoes(textoSaudacao);
         spinner();
     }
 

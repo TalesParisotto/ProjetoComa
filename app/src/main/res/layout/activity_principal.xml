@@ -67,6 +67,17 @@
             fab:fab_size="mini"
             />
 
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/menu_departamento"
+            android:onClick="adicionarDepartamento"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_adicionar_branco_24dp"
+            fab:fab_colorNormal="@color/colorPrimaryReceita"
+            fab:fab_label="Departamento"
+            fab:fab_size="mini"
+            />
+
     </com.github.clans.fab.FloatingActionMenu>
 
 </android.support.design.widget.CoordinatorLayout>
