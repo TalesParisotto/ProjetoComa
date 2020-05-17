@@ -57,7 +57,7 @@ public class PrincipalActivity extends AppCompatActivity {
     private List<Movimentacao> movimentacoes = new ArrayList<>();
     private Movimentacao movimentacao;
     private DatabaseReference movimentacaoRef;
-    private String mesAnoSelecionado;
+    public static String mesAnoSelecionado;
 
     private List<String> areas;
     private int posi;
@@ -217,10 +217,23 @@ public class PrincipalActivity extends AppCompatActivity {
 
                         movi = movimentacao;
 
-                        if(movi.getTipo().equals("r")){
-                            adicionarReceita(viewHolder.itemView);
-                        }else{
-                            adicionarDespesa(viewHolder.itemView);
+                        int podeProseguir = 0;
+                        for(String u: areas){
+                            if(movi.getCategoria().equals(u)){
+                                podeProseguir++;
+                            }
+                        }
+
+                        if(podeProseguir > 0) {
+                            if (movi.getTipo().equals("r")) {
+                                adicionarReceita(viewHolder.itemView);
+                            } else {
+                                adicionarDespesa(viewHolder.itemView);
+                            }
+                        }else {
+                            Toast.makeText(PrincipalActivity.this,
+                                    "Não é possivel editar um registro sem departamento cadastrado",
+                                    Toast.LENGTH_LONG).show();
                         }
                     }
                 });

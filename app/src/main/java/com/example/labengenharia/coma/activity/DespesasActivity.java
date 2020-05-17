@@ -213,37 +213,42 @@ public class DespesasActivity extends AppCompatActivity {
 
     public void salvarDespesa(View view){
 
+        if(areas.size() > 0) {
+                if (key != null) {
+                    if (validarCamposDespesa()) {
+                        editarDespesa();
+                        finish();
+                    }
+                } else {
+                    if (validarCamposDespesa()) {
 
-        if(key != null) {
-            if (validarCamposDespesa()) {
-                editarDespesa();
-                finish();
-            }
-        }else {
-                if (validarCamposDespesa()) {
+                        System.out.println("chegouuuuu aquiii");
 
-                    System.out.println("chegouuuuu aquiii");
+                        movimentacao = new Movimentacao();
+                        String data = campoData.getText().toString();
+                        Double valorRecuperado = Double.parseDouble(campoValor.getText().toString());
 
-                    movimentacao = new Movimentacao();
-                    String data = campoData.getText().toString();
-                    Double valorRecuperado = Double.parseDouble(campoValor.getText().toString());
+                        movimentacao.setValor(valorRecuperado);
+                        movimentacao.setCategoria(tipoDepartamento);
+                        movimentacao.setDescricao(campoDescricao.getText().toString());
+                        movimentacao.setData(data);
+                        movimentacao.setTipo("d");
 
-                    movimentacao.setValor(valorRecuperado);
-                    movimentacao.setCategoria(tipoDepartamento);
-                    movimentacao.setDescricao(campoDescricao.getText().toString());
-                    movimentacao.setData(data);
-                    movimentacao.setTipo("d");
+                        Double despesaAtualizada = despesaTotal + valorRecuperado;
+                        atualizarDespesa(despesaAtualizada);
 
-                    Double despesaAtualizada = despesaTotal + valorRecuperado;
-                    atualizarDespesa(despesaAtualizada);
+                        movimentacao.salvar(data);
 
-                    movimentacao.salvar(data);
+                        finish();
 
-                    finish();
-
+                    }
                 }
-            }
+            } else {
+            Toast.makeText(DespesasActivity.this,
+                    "Por favor selecione um departamento",
+                    Toast.LENGTH_SHORT).show();
         }
+    }
 
     public Boolean validarCamposDespesa(){
 

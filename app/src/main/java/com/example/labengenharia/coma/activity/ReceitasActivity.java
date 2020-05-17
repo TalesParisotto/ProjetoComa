@@ -92,27 +92,39 @@ public class ReceitasActivity extends AppCompatActivity {
                 // initialize the array
                 areas = new ArrayList<String>();
 
-
+                int tem = 0;
                 for (DataSnapshot areaSnapshot: dataSnapshot.getChildren()) {
                     Departamento dep = areaSnapshot.getValue(Departamento.class);
                     areas.add(dep.getDepartemento());
                    // areas.add(areaSnapshot.getValue(String.class));
+                    if(dep.getDepartemento().equals(PrincipalActivity.movi.getCategoria())){
+                        tem++;
+                    }
                 }
                 campoCategoria = PrincipalActivity.movi.getCategoria();
 
                 int posicaoInicialSpinner = 0;
-                for(int i = 0; i <= areas.size(); i++){
-                    if(campoCategoria.equals(areas.get(i))){
-                        posicaoInicialSpinner = i;
-                        break;
-                    };
+                int entrou = 0;
+                if(areas.size() > 0) {
+                    for (int i = 0; i < areas.size(); i++) {
+                        if (campoCategoria.equals(areas.get(i))) {
+                            posicaoInicialSpinner = i;
+                            entrou = 1;
+                            break;
+                        }
+                        ;
+                    }
                 }
 
                 Spinner areaSpinner = (Spinner) findViewById(R.id.spinner2);
                 ArrayAdapter<String> areasAdapter = new ArrayAdapter<String>(ReceitasActivity.this, android.R.layout.simple_spinner_item, areas);
                 areasAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 areaSpinner.setAdapter(areasAdapter);
-                areaSpinner.setSelection(posicaoInicialSpinner);
+                if(entrou > 0) {
+                    if(tem > 0){
+                        areaSpinner.setSelection(posicaoInicialSpinner);
+                    }
+                }
                 areaSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -152,6 +164,7 @@ public class ReceitasActivity extends AppCompatActivity {
                 for (DataSnapshot areaSnapshot: dataSnapshot.getChildren()) {
                     Departamento dep = areaSnapshot.getValue(Departamento.class);
                     areas.add(dep.getDepartemento());
+
                     // areas.add(areaSnapshot.getValue(String.class));
                 }
 
@@ -217,34 +230,41 @@ public class ReceitasActivity extends AppCompatActivity {
 
     public void salvarReceita(View view){
 
-        if(key != null){
-            if (validarCamposReceita()) {
-                System.out.println("entro no editarReceita");
-                editarReceita();
-                finish();
+        if(areas.size() > 0) {
+
+            if (key != null) {
+                if (validarCamposReceita()) {
+                    System.out.println("entro no editarReceita");
+                    editarReceita();
+                    finish();
+                }
+            } else {
+
+                if (validarCamposReceita()) {
+                    System.out.println("salvarReceita");
+                    movimentacao = new Movimentacao();
+                    String data = campoData.getText().toString();
+                    Double valorRecuperado = Double.parseDouble(campoValor.getText().toString());
+
+                    movimentacao.setValor(valorRecuperado);
+                    movimentacao.setCategoria(tipoDepartamento);
+                    movimentacao.setDescricao(campoDescricao.getText().toString());
+                    movimentacao.setData(data);
+                    movimentacao.setTipo("r");
+
+                    Double receitaAtualizada = receitaTotal + valorRecuperado;
+                    atualizarReceita(receitaAtualizada);
+
+                    movimentacao.salvar(data);
+
+                    finish();
+
+                }
             }
-        }else {
-
-            if (validarCamposReceita()) {
-                System.out.println("salvarReceita");
-                movimentacao = new Movimentacao();
-                String data = campoData.getText().toString();
-                Double valorRecuperado = Double.parseDouble(campoValor.getText().toString());
-
-                movimentacao.setValor(valorRecuperado);
-                movimentacao.setCategoria(tipoDepartamento);
-                movimentacao.setDescricao(campoDescricao.getText().toString());
-                movimentacao.setData(data);
-                movimentacao.setTipo("r");
-
-                Double receitaAtualizada = receitaTotal + valorRecuperado;
-                atualizarReceita(receitaAtualizada);
-
-                movimentacao.salvar( data );
-
-                finish();
-
-            }
+        } else{
+            Toast.makeText(ReceitasActivity.this,
+                    "Por favor selecione um departamento",
+                    Toast.LENGTH_SHORT).show();
         }
 
     }

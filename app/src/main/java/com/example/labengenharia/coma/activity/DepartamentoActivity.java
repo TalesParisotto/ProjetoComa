@@ -40,6 +40,8 @@ public class DepartamentoActivity extends AppCompatActivity {
     private int posi;
     private List<Departamento> departamentos = new ArrayList<>();
 
+    private String mesAnoSelecionado = PrincipalActivity.mesAnoSelecionado;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,31 +121,40 @@ public class DepartamentoActivity extends AppCompatActivity {
 
     public void excluirDepartamento(View view){
 
-        Departamento removerDepartamento = new Departamento();
+        if(areas.size() > 0) {
 
-        String areaPosicao = areas.get(posi);
-        int tamanhoDepartamentos = departamentos.size();
+            Departamento removerDepartamento = new Departamento();
 
-        for(int i = 0;i < tamanhoDepartamentos;i++) {
-            String igualDepartamento = departamentos.get(i).getDepartemento();
-            if (areaPosicao.equals(igualDepartamento)) {
-                removerDepartamento = departamentos.get(i);
+            String areaPosicao = areas.get(posi);
+            int tamanhoDepartamentos = departamentos.size();
+
+            for (int i = 0; i < tamanhoDepartamentos; i++) {
+                String igualDepartamento = departamentos.get(i).getDepartemento();
+                if (areaPosicao.equals(igualDepartamento)) {
+                    removerDepartamento = departamentos.get(i);
+                }
             }
+
+            alterarDepartamento(removerDepartamento);
+
+            System.out.println("derp" + removerDepartamento.getDepartemento() + " kk " + areaPosicao);
+
+
+            String emailUsuario = autenticacao.getCurrentUser().getEmail();
+            String idUsuario = Base64Custom.codificarBase64(emailUsuario);
+            movimentacaoRef = firebaseRef.child("Departamento")
+                    .child(idUsuario);
+
+            System.out.println("keyy" + removerDepartamento.getKey());
+
+            movimentacaoRef.child(removerDepartamento.getKey()).removeValue();
+
+            finish();
+        } else {
+            Toast.makeText(DepartamentoActivity.this,
+                    "Por favor selecione um departamento",
+                    Toast.LENGTH_SHORT).show();
         }
-
-            System.out.println("derp"+ removerDepartamento.getDepartemento() + " kk " + areaPosicao);
-
-
-        String emailUsuario = autenticacao.getCurrentUser().getEmail();
-        String idUsuario = Base64Custom.codificarBase64( emailUsuario );
-        movimentacaoRef = firebaseRef.child("Departamento")
-                .child( idUsuario );
-
-        System.out.println("keyy"+ removerDepartamento.getKey());
-
-        movimentacaoRef.child( removerDepartamento.getKey() ).removeValue();
-
-        finish();
     }
 
 
@@ -163,24 +174,69 @@ public class DepartamentoActivity extends AppCompatActivity {
 
     }
 
+    public void alterarDepartamento(final Departamento removerDepartamento){
+
+        String emailUsuario = autenticacao.getCurrentUser().getEmail();
+        String idUsuario = Base64Custom.codificarBase64( emailUsuario );
+        movimentacaoRef = firebaseRef.child("movimentacao")
+                .child( idUsuario )
+                .child( mesAnoSelecionado );
+
+         final List<String> keys = new ArrayList<>();
+
+         movimentacaoRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+
+                for (DataSnapshot dados: dataSnapshot.getChildren() ){
+
+                    Movimentacao movimentacao = dados.getValue( Movimentacao.class );
+                    if(removerDepartamento.getDepartemento().equals(movimentacao.getCategoria())) {
+                        keys.add(dados.getKey());
+                        System.out.println("dados" + dados.getKey());
+                    }
+
+                }
+                for(int i = 0; i < keys.size();i++){
+                    System.out.println("dentroFor" + keys.get(0));
+                    movimentacaoRef.child(keys.get(0)).removeValue();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     public void editarDepartamentoActivity(View view){
 
-        Departamento editarDepartamento = new Departamento();
+        if(areas.size() > 0) {
 
-        String areaPosicao = areas.get(posi);
-        int tamanhoDepartamentos = departamentos.size();
+            Departamento editarDepartamento = new Departamento();
 
-        for(int i = 0;i < tamanhoDepartamentos;i++) {
-            String igualDepartamento = departamentos.get(i).getDepartemento();
-            if (areaPosicao.equals(igualDepartamento)) {
-                editarDepartamento = departamentos.get(i);
+            String areaPosicao = areas.get(posi);
+            int tamanhoDepartamentos = departamentos.size();
+
+            for (int i = 0; i < tamanhoDepartamentos; i++) {
+                String igualDepartamento = departamentos.get(i).getDepartemento();
+                if (areaPosicao.equals(igualDepartamento)) {
+                    editarDepartamento = departamentos.get(i);
+                }
             }
-        }
 
-        Intent intent = new Intent(this, EditarDepartamentoActivity.class);
-        intent.putExtra("departamento", editarDepartamento.getDepartemento());
-        intent.putExtra("departamentoKey", editarDepartamento.getKey());
-        startActivity(intent);
+            Intent intent = new Intent(this, EditarDepartamentoActivity.class);
+            intent.putExtra("departamento", editarDepartamento.getDepartemento());
+            intent.putExtra("departamentoKey", editarDepartamento.getKey());
+            startActivity(intent);
+        } else {
+            Toast.makeText(DepartamentoActivity.this,
+                    "Por favor selecione um departamento",
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
