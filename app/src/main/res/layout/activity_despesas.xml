@@ -84,7 +84,8 @@
             android:id="@+id/editDescricao"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="ex: Bombom recheado" />
+            android:hint="ex: Bombom recheado"
+            android:maxLength="100" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.FloatingActionButton
