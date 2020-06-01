@@ -11,43 +11,44 @@
         android:id="@+id/editDep"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="140dp"
+        android:layout_marginTop="20dp"
         android:ems="10"
         android:hint="Departamento:"
         android:inputType="text"
         android:maxLength="25"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/textView9" />
 
     <Spinner
         android:id="@+id/spinnerOperacaoDep"
         android:layout_width="200dp"
         android:layout_height="54dp"
-        android:layout_marginTop="68dp"
+        android:layout_marginTop="60dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/adicionarDepartamento" />
 
     <Button
-        android:id="@+id/excluirDepartamento"
+        android:id="@+id/editarDepartamento"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="28dp"
         android:background="@color/colorPrimary"
-        android:onClick="excluirDepartamento"
-        android:text="Excluir"
+        android:onClick="editarDepartamentoActivity"
+        android:text="Editar"
         android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editarDepartamento" />
+        app:layout_constraintTop_toBottomOf="@+id/spinnerOperacaoDep" />
 
     <Button
         android:id="@+id/adicionarDepartamento"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="28dp"
         android:background="@color/colorPrimary"
         android:onClick="salvarDerpartamento"
         android:text="adicionar"
@@ -58,17 +59,38 @@
         app:layout_constraintTop_toBottomOf="@+id/editDep" />
 
     <Button
-        android:id="@+id/editarDepartamento"
+        android:id="@+id/excluirDepartamento"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:background="@color/colorPrimary"
+        android:onClick="excluirDepartamento"
+        android:text="Excluir"
+        android:textColor="@android:color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editarDepartamento" />
+
+    <ImageView
+        android:id="@+id/imageView6"
+        android:layout_width="0dp"
+        android:layout_height="460px"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/boneco_escreve" />
+
+    <TextView
+        android:id="@+id/textView9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:background="@color/colorPrimary"
-        android:onClick="editarDepartamentoActivity"
-        android:text="Editar"
-        android:textColor="@android:color/white"
+        android:text="Adicione, edite ou exclua um departamento"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerOperacaoDep" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView6" />
 
 </android.support.constraint.ConstraintLayout>
