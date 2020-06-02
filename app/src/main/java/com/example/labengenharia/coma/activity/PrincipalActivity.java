@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -30,6 +31,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
@@ -39,6 +41,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PrincipalActivity extends AppCompatActivity {
+
+    private MaterialSearchView searchView;
 
     private MaterialCalendarView calendarView;
     private TextView textoSaudacao, textoSaldo;
@@ -70,13 +74,20 @@ public class PrincipalActivity extends AppCompatActivity {
 
     static Movimentacao movi;
 
+    private String[] arrayPesquisa = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_principal);
+
+        searchView = findViewById(R.id.searchView);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Coma");
         setSupportActionBar(toolbar);
+
+        setSearchView();
 
         textoSaldo = findViewById(R.id.textSaldo);
         textoSaudacao = findViewById(R.id.textSaudacao);
@@ -96,6 +107,38 @@ public class PrincipalActivity extends AppCompatActivity {
 
 
 
+
+    }
+
+    public void setSearchView(){
+
+        searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                arrayPesquisa = query.split(" ");
+
+                recuperarMovimentacoes2(posi);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
+            @Override
+            public void onSearchViewShown() {
+
+            }
+
+            @Override
+            public void onSearchViewClosed() {
+                recuperarMovimentacoes2(posi);
+            }
+        });
 
     }
 
@@ -285,20 +328,47 @@ public class PrincipalActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 movimentacoes.clear();
+                double temResutado = 0.5;
+
                 for (DataSnapshot dados: dataSnapshot.getChildren() ){
 
                     Movimentacao movimentacao = dados.getValue( Movimentacao.class );
                     movimentacao.setKey( dados.getKey() );
 
                     String departamento = movimentacao.getCategoria();
+                    String[] arrayDescricao = movimentacao.getDescricao().split(" ");
 
-                    if( areas.get(position).equals(departamento)) {
-                        movimentacoes.add(movimentacao);
-                        System.out.println("Departamento: " + movimentacao.getCategoria());
+
+                    if(arrayPesquisa != null){
+                        outerloop:
+                        for(int i = 0; i < arrayPesquisa.length; i++){
+                            for(int j = 0; j < arrayDescricao.length; j++){
+                                if(arrayPesquisa[i].equals(arrayDescricao[j])){
+                                    movimentacoes.add(movimentacao);
+                                    temResutado++;
+                                    System.out.println("outer"+temResutado);
+                                    break outerloop;
+                                }
+                            }
+                        }
+                    }else {
+                        if (areas.get(position).equals(departamento)) {
+                            movimentacoes.add(movimentacao);
+                            System.out.println("Departamento: " + movimentacao.getCategoria());
+                        }
                     }
 
                 }
+                if(arrayPesquisa != null) {
+                    if (temResutado == 0.5) {
+                        System.out.println("inner" + temResutado);
+                        Toast.makeText(PrincipalActivity.this,
+                                "Nem um registro encontrado no mês selecionado",
+                                Toast.LENGTH_LONG).show();
+                    }
+                }
 
+                arrayPesquisa = null;
                 adapterMovimentacao.notifyDataSetChanged();
 
             }
@@ -378,7 +448,13 @@ public class PrincipalActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_principal, menu);
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_principal, menu);
+
+        MenuItem item = menu.findItem(R.id.menu_search);
+        searchView.setMenuItem( item );
+
         return super.onCreateOptionsMenu(menu);
     }
 
