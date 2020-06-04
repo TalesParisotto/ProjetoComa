@@ -343,10 +343,11 @@ public class PrincipalActivity extends AppCompatActivity {
                         outerloop:
                         for(int i = 0; i < arrayPesquisa.length; i++){
                             for(int j = 0; j < arrayDescricao.length; j++){
-                                if(arrayPesquisa[i].equals(arrayDescricao[j])){
+                                if(arrayPesquisa[i].equalsIgnoreCase(arrayDescricao[j])){
                                     movimentacoes.add(movimentacao);
                                     temResutado++;
                                     System.out.println("outer"+temResutado);
+                                    System.out.println("movimentacoes adiconado "+movimentacoes.get(i).getDescricao());
                                     break outerloop;
                                 }
                             }
