@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.example.labengenharia.coma.R;
 import com.example.labengenharia.coma.model.Movimentacao;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 
@@ -33,15 +34,15 @@ public class AdapterMovimentacao extends RecyclerView.Adapter<AdapterMovimentaca
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         Movimentacao movimentacao = movimentacoes.get(position);
-
+        DecimalFormat df = new DecimalFormat("0.00");
         holder.titulo.setText(movimentacao.getDescricao());
-        holder.valor.setText(String.valueOf(movimentacao.getValor()));
+        holder.valor.setText(String.valueOf(df.format(movimentacao.getValor())));
         holder.categoria.setText(movimentacao.getCategoria());
         holder.valor.setTextColor(context.getResources().getColor(R.color.colorAccentReceita));
 
         if (movimentacao.getTipo().equals("d")) {
             holder.valor.setTextColor(context.getResources().getColor(R.color.colorAccent));
-            holder.valor.setText("-" + movimentacao.getValor());
+            holder.valor.setText("-" + df.format(movimentacao.getValor()));
         }
     }
 

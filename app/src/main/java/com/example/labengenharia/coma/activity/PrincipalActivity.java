@@ -302,15 +302,15 @@ public class PrincipalActivity extends AppCompatActivity {
         String emailUsuario = autenticacao.getCurrentUser().getEmail();
         String idUsuario = Base64Custom.codificarBase64( emailUsuario );
         usuarioRef = firebaseRef.child("usuarios").child( idUsuario );
-
+        DecimalFormat df = new DecimalFormat("0.00");
         if ( movimentacao.getTipo().equals("r") ){
             receitaTotal = receitaTotal - movimentacao.getValor();
-            usuarioRef.child("receitaTotal").setValue(receitaTotal);
+            usuarioRef.child("receitaTotal").setValue(df.format(receitaTotal));
         }
 
         if ( movimentacao.getTipo().equals("d") ){
             despesaTotal = despesaTotal - movimentacao.getValor();
-            usuarioRef.child("despesaTotal").setValue( despesaTotal );
+            usuarioRef.child("despesaTotal").setValue( df.format(despesaTotal) );
         }
 
     }
@@ -424,14 +424,13 @@ public class PrincipalActivity extends AppCompatActivity {
         valueEventListenerUsuario = usuarioRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
                 Usuario usuario = dataSnapshot.getValue( Usuario.class );
 
                 despesaTotal = usuario.getDespesaTotal();
                 receitaTotal = usuario.getReceitaTotal();
                 resumoUsuario = receitaTotal - despesaTotal;
 
-                DecimalFormat decimalFormat = new DecimalFormat("0.##");
+                DecimalFormat decimalFormat = new DecimalFormat("0.00");
                 String resultadoFormatado = decimalFormat.format( resumoUsuario );
 
                 textoSaudacao.setText("Olá, " + usuario.getNome() );
