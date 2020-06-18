@@ -2,6 +2,7 @@ package com.example.labengenharia.coma.activity;
 
 import android.content.Intent;
 import android.support.design.widget.TextInputEditText;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -25,6 +26,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class DespesasActivity extends AppCompatActivity {
@@ -50,13 +52,18 @@ public class DespesasActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_despesas);
 
+        String diaAtual = String.valueOf(Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+        String mesAtual = String.valueOf(Calendar.getInstance().get(Calendar.MONTH));
+        if (Integer.parseInt(mesAtual) <= 9 ){
+            mesAtual = "0"+mesAtual;
+        }
         campoValor = findViewById(R.id.editValor);
         campoData = findViewById(R.id.editData);
         //campoCategoria = findViewById(R.id.editCategoria);
         campoDescricao = findViewById(R.id.editDescricao);
 
         //Preenche o campo data com a date atual
-        campoData.setText( DateCustom.dataAtual() );
+        campoData.setText( diaAtual+"/"+mesAtual );
         recuperarDespesaTotal();
 
         if( PrincipalActivity.movi != null){
@@ -223,21 +230,23 @@ public class DespesasActivity extends AppCompatActivity {
                     if (validarCamposDespesa()) {
 
                         System.out.println("chegouuuuu aquiii");
-
+                        String anoAtual = String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
                         movimentacao = new Movimentacao();
                         String data = campoData.getText().toString();
                         Double valorRecuperado = Double.parseDouble(campoValor.getText().toString());
+                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 
                         movimentacao.setValor(valorRecuperado);
                         movimentacao.setCategoria(tipoDepartamento);
                         movimentacao.setDescricao(campoDescricao.getText().toString());
-                        movimentacao.setData(data);
+                        System.out.println(data+"/"+anoAtual);
+                        movimentacao.setData(data+"/"+anoAtual);
                         movimentacao.setTipo("d");
 
                         Double despesaAtualizada = despesaTotal + valorRecuperado;
                         atualizarDespesa(despesaAtualizada);
 
-                        movimentacao.salvar(data);
+                        movimentacao.salvar(data+"/"+anoAtual);
 
                         finish();
 
@@ -256,10 +265,21 @@ public class DespesasActivity extends AppCompatActivity {
         String textoData = campoData.getText().toString();
         //String textoCategoria = campoCategoria.getText().toString();
         String textoDescricao = campoDescricao.getText().toString();
-
+        System.out.println(textoData.length());
         if ( !textoValor.isEmpty() ){
             if ( !textoData.isEmpty() ){
                // if ( !textoCategoria.isEmpty() ){
+                    if(textoData.length() <= 4) {
+                        Toast.makeText(DespesasActivity.this,
+                                "Inserir dia e mes no formato: 04/05",
+                                Toast.LENGTH_SHORT).show();
+                        return false;
+                    }else if (textoData.length() > 5) {
+                        Toast.makeText(DespesasActivity.this,
+                                "Inserir dia e mes no formato: 04/05",
+                                Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
                     if ( !textoDescricao.isEmpty() ){
                         return true;
                     }else {
