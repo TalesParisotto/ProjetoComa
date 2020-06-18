@@ -53,7 +53,7 @@ public class DespesasActivity extends AppCompatActivity {
         setContentView(R.layout.activity_despesas);
 
         String diaAtual = String.valueOf(Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
-        String mesAtual = String.valueOf(Calendar.getInstance().get(Calendar.MONTH));
+        String mesAtual = String.valueOf(Calendar.getInstance().get(Calendar.MONTH)+1);
         if (Integer.parseInt(mesAtual) <= 9 ){
             mesAtual = "0"+mesAtual;
         }
