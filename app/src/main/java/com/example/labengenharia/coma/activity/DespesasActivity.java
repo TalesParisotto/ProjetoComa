@@ -234,7 +234,6 @@ public class DespesasActivity extends AppCompatActivity {
                         movimentacao = new Movimentacao();
                         String data = campoData.getText().toString();
                         Double valorRecuperado = Double.parseDouble(campoValor.getText().toString());
-                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 
                         movimentacao.setValor(valorRecuperado);
                         movimentacao.setCategoria(tipoDepartamento);

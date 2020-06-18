@@ -25,6 +25,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class ReceitasActivity extends AppCompatActivity {
@@ -50,13 +51,18 @@ public class ReceitasActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_receitas);
 
+        String diaAtual = String.valueOf(Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+        String mesAtual = String.valueOf(Calendar.getInstance().get(Calendar.MONTH));
+        if (Integer.parseInt(mesAtual) <= 9 ){
+            mesAtual = "0"+mesAtual;
+        }
         campoValor = findViewById(R.id.editValor);
         campoData = findViewById(R.id.editData);
         //campoCategoria = findViewById(R.id.editCategoria);
         campoDescricao = findViewById(R.id.editDescricao);
 
         //Preenche o campo data com a date atual
-        campoData.setText( DateCustom.dataAtual() );
+        campoData.setText( diaAtual+"/"+mesAtual );
         recuperarReceitaTotal();
 
 
@@ -243,19 +249,20 @@ public class ReceitasActivity extends AppCompatActivity {
                 if (validarCamposReceita()) {
                     System.out.println("salvarReceita");
                     movimentacao = new Movimentacao();
+                    String anoAtual = String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
                     String data = campoData.getText().toString();
                     Double valorRecuperado = Double.parseDouble(campoValor.getText().toString());
 
                     movimentacao.setValor(valorRecuperado);
                     movimentacao.setCategoria(tipoDepartamento);
                     movimentacao.setDescricao(campoDescricao.getText().toString());
-                    movimentacao.setData(data);
+                    movimentacao.setData(data+"/"+anoAtual);
                     movimentacao.setTipo("r");
 
                     Double receitaAtualizada = receitaTotal + valorRecuperado;
                     atualizarReceita(receitaAtualizada);
 
-                    movimentacao.salvar(data);
+                    movimentacao.salvar(data+"/"+anoAtual);
 
                     finish();
 
@@ -279,6 +286,17 @@ public class ReceitasActivity extends AppCompatActivity {
         if ( !textoValor.isEmpty() ){
             if ( !textoData.isEmpty() ){
                 //if ( !textoCategoria.isEmpty() ){
+                    if(textoData.length() <= 4) {
+                        Toast.makeText(ReceitasActivity.this,
+                                "Inserir dia e mes no formato: 04/05",
+                                Toast.LENGTH_SHORT).show();
+                        return false;
+                    }else if (textoData.length() > 5) {
+                        Toast.makeText(ReceitasActivity.this,
+                                "Inserir dia e mes no formato: 04/05",
+                                Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
                     if ( !textoDescricao.isEmpty() ){
                         return true;
                     }else {
